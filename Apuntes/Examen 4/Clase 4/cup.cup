@@ -1,0 +1,10 @@
+ded ::= tipo listavar pyc;
+
+listavar ::= listavar COMA IDENT
+        | IDENT
+        ;
+
+tipo ::= INT
+        | DOUBLE
+        | tipo PUNT
+        ;

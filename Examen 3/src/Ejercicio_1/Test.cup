@@ -1,0 +1,56 @@
+import java_cup.runtime.*;
+
+
+action code
+{:
+    public int x = 0;
+:}
+
+
+terminal MAS, X, MENOS, PYC, ASIG, ELEV, MINUS;
+terminal Integer NUMERO;
+
+non terminal Integer exp;
+non terminal asig;
+nonterminal linea;
+
+precedence left PYC;
+precedence left MAS, MENOS;
+precedence left X, NUMERO;
+precedence left ELEV;
+precedence left MINUS;
+
+
+linea::= asig:a                    {:System.out.println(a);:};
+
+asig ::= X ASIG NUMERO:n PYC {:x = n; /*System.out.print("x="+n+"; ");*/:} exp:e {:RESULT = e;:};
+asig ::= X ASIG MENOS NUMERO:n PYC {:x = n;:} exp:e {:RESULT = e;:};
+
+
+
+exp ::= exp:e1 MAS exp:e2     {:RESULT = e1 + e2;:}
+    | exp:e1 ELEV exp:e2      {:RESULT = (int)Math.pow(e1, e2);:}
+    | exp:e1 MENOS exp:e2     {:RESULT = e1 - e2;:}
+    | NUMERO:n exp:e          {:RESULT = e*n;:}
+    | exp:e PYC               {:RESULT = e;:}
+    | X                       {:RESULT = x;:}
+    | NUMERO:n                {:RESULT = n;:}
+    | MENOS exp:e             {:RESULT = -e;:}
+    %prec MINUS
+    ;
+
+
+
+////exp::= exp:e EOLN                       {:RESULT = e; :};
+////exp::= exp:e1 EOLN exp:e2               {:System.out.println(e1); RESULT = e2; :};
+////exp::= EOLN exp:e                       {:RESULT = e; :};
+//exp::= EOLN                             {::};
+//exp ::= exp:e1 MAS exp:e2               {:RESULT = e1 + e2; :}
+//        | exp:e1 MENOS exp:e2           {:RESULT = e1 - e2; :}
+//        | exp:e1 POR exp:e2             {:RESULT = e1 * e2; :}
+//        | exp:e1 DIV exp:e2             {:RESULT = e1 / e2; :}
+//        | LP exp:e RP                   {:RESULT = e; :}
+//        | NUMERO:n                      {:RESULT = new Integer(n);:}
+//        | MENOS exp:e                   {:RESULT = -e;:}
+//    %prec MINUS
+//    ;

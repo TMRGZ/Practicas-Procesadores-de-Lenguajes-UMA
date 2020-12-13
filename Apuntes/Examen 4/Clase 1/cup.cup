@@ -1,0 +1,16 @@
+non terminal String exp;
+terminal String NUM, ID;
+
+listaSent ::= listaSent sent
+            | sent
+            ;
+
+sent ::= ID IGVAL exp PYC
+        ;
+
+exp ::= exp:e1 MAS exp:e2     {:String temp = Gem.nuevaTemp(); Gem.salida(Gem.SUMA, e1, e2, temp); RESULT = temp;:};
+        | exp POR exp 
+        |
+        |
+        | NUMERO
+        ;

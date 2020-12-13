@@ -1,0 +1,17 @@
+import java.cup.runtime.*;
+
+%%
+terminal MAS, POR;
+terminal String NUMERO;
+
+non terminal exp;
+
+precedence left MAS;
+precedence left POR; // Mas prioridad = + abajo
+
+%%
+
+exp::= exp:e1 MAS exp:e2 {:RESULT = e1+e2;:}; // E -> E+E
+exp::= exp:e1 POR exp:e2 {:RESULT = e1*e2;:}; // E -> E*E
+exp::= NUMERO:v {:RESULT = new Integer(v);:}; // E -> n
+// Se crea una clase sym.java al compilar

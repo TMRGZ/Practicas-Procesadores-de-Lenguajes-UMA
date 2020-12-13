@@ -1,0 +1,31 @@
+import java_cup.runtime.*;
+
+action code
+{:
+    public String x;
+:}
+
+terminal String INT, LONG, FLOAT, DOUBLE, CHAR, BOOLEAN, IDENT, PYC, COMA;
+
+nonterminal String exp, select;
+nonterminal linea;
+
+
+
+linea::= exp:e                    {:System.out.println(e);:};
+
+
+exp::= select:s IDENT:id PYC        {:RESULT = s + id + ";";:};
+exp::= select:s IDENT:id COMA exp:e {:RESULT = s + id + ";\n" + e;:};
+exp::= IDENT:id COMA exp:e          {:RESULT = x + id + ";\n" + e;:};
+exp::= IDENT:id PYC                 {:RESULT = x + id + ";";:};
+
+
+
+
+select ::= INT {: RESULT = "int "; x = "int ";:};
+select ::= LONG {:RESULT = "long "; x = "long ";:};
+select ::= FLOAT {:RESULT = "float "; x = "float ";:};
+select ::= DOUBLE {:RESULT = "double "; x = "double ";:};
+select ::= CHAR {:RESULT = "char "; x = "char ";:};
+select ::= BOOLEAN {:RESULT = "boolean "; x = "boolean ";:};

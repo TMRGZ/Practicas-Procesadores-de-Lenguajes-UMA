@@ -1,0 +1,19 @@
+axioma -> listaSent EOF
+listaSent -> sent listaSent
+sent -> WHILE AP cond AP sent
+sent -> DO sent WHILE AP cond CP PYC
+cond -> var MENOR var
+cond -> var MENOR var
+sent -> ALL listaSent CLL
+listaSent -> sent listaSent
+sent -> IDENT IGUAL var PYC
+cond -> var MENOR var
+listaSent -> sent listaSent
+sent -> WHILE AP cond AP sent
+sent -> DO sent WHILE AP cond CP PYC
+cond -> var MENOR var
+cond -> var MENOR var
+sent -> DO sent WHILE AP cond CP PYC
+sent -> IDENT IGUAL var PYC
+cond -> var MENOR var
+ERROR token = WHILE

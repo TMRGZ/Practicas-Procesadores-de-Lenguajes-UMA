@@ -1,0 +1,29 @@
+import java_cup.runtime.*;
+
+
+terminal SUMA, RESTA, MULTIPLICA, DIVIDE, AP, CP, PYC, COMA;
+terminal Integer NUMERO;
+
+non terminal Integer exp, expsuma, expresta, expmul, expdiv;
+nonterminal linea;
+
+
+precedence left SUMA, RESTA;
+precedence left MULTIPLICA, DIVIDE; // Mas prioridad = + abajo
+precedence left COMA;
+
+
+linea::= exp:e PYC                                         {:System.out.println(e);:};
+
+exp ::= SUMA AP exp:e1 COMA exp:e2 CP                   {:RESULT = e1 + e2; :}
+        | RESTA AP exp:e1 COMA exp:e2 CP               {:RESULT = e1 - e2; :}
+        | MULTIPLICA AP exp:e1 COMA exp:e2 CP           {:RESULT = e1 * e2; :}
+        | DIVIDE AP exp:e1 COMA exp:e2 CP               {:RESULT = e1 / e2; :}
+        | NUMERO:n                                      {:RESULT = new Integer(n);:}
+        ;
+
+
+
+
+
+
