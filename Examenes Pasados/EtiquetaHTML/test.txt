@@ -1,0 +1,7 @@
+<HTML>
+Esto es un ejemplo de p&aacute;gina HTML
+<TITLE> Este es el 
+<H1> t&iacute;tulo </H1> de la p&aacute;gina
+ de ejemplo  </TITLE>
+Y aqu&iacute; va el contenido ....
+</HTML>

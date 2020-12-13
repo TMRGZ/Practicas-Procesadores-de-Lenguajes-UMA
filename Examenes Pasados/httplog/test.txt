@@ -1,0 +1,12 @@
+alcor.lcc.uma.es - - [10/Feb/1998:11:29:12 +0100] "POST /cgi-bin/cesar/wisar HTTP/1.0" 200 873
+alcor.lcc.uma.es - - [10/Feb/1998:11:29:17 +0100] "POST /cgi-bin/cesar/wisar HTTP/1.0" 200 594
+195.53.21.4 - - [10/Feb/1998:11:30:26 +0100] "GET /docencia/ETSIInf/asignat_cursos.html HTTP/1.0" 304 0
+195.53.21.4 - - [10/Feb/1998:11:30:31 +0100] "GET /docencia/gif/fac-back.gif HTTP/1.0" 404 -
+195.53.21.4 - - [10/Feb/1998:11:30:39 +0100] "GET /docencia/gif/fac-back.gif HTTP/1.0" 404 -
+baltasar.uca.es - - [10/Feb/1998:11:31:28 +0100] "GET / HTTP/1.0" 200 2092
+baltasar.uca.es - - [10/Feb/1998:11:31:29 +0100] "GET /gif/english.flag.gif HTTP/1.0" 200 129
+baltasar.uca.es - - [10/Feb/1998:11:31:29 +0100] "GET /gif/fondo_inf.gif HTTP/1.0" 200 4411
+baltasar.uca.es - - [10/Feb/1998:11:31:30 +0100] "GET /cgi-bin/Count.cgi?dd=B|df=index.dat HTTP/1.0" 200 2236
+himalia.lcc.uma.es - - [10/Feb/1998:11:37:31 +0100] "GET / HTTP/1.0" 304 0
+usu221.activanet.es - - [10/Feb/1998:11:55:49 +0100] "GET /tea/cap1/ce4f.html HTTP/1.0" 200 413
+phoebe.lcc.uma.es - - [10/Feb/1998:12:13:25 +0100] "POST /cgi-bin/cgi-bueno/experto.cgi HTTP/1.0" 200 287

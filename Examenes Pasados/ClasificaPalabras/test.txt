@@ -1,0 +1,3 @@
+Ciervo   tigre   habitacion
+raton   que?  cuando  donde
+curso   cuarto  4to  f.i.n.
