@@ -1,0 +1,24 @@
+import java_cup.runtime.*;
+
+
+terminal String INT, DOUBLE, PYC, IDENT;
+
+non terminal String decl, tipo, idtint, idtdd;
+
+
+decl::= INT:intt idtint:i PYC:pyc {:System.out.print(":int; "); RESULT = i;:};
+decl::= DOUBLE:dd idtdd:i PYC:pyc {:System.out.print(":double; "); RESULT = i;:};
+
+idtint::= idtint:i IDENT:id   {: System.out.print(":int; " + id); RESULT = i;  :};
+idtint::= IDENT:id   {: System.out.print(id); :};
+
+idtdd::= idtdd:i IDENT:id   {: System.out.print(":double; " + id); RESULT = i;  :};
+idtdd::= IDENT:id   {: System.out.print(id); :};
+//tipo::= INT:intt {:System.out.print("int ");:};
+//tipo::= DOUBLE:dd {:System.out.print("double ");:};
+
+
+
+
+
+

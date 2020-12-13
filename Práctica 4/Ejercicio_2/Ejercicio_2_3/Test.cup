@@ -1,0 +1,33 @@
+import java_cup.runtime.*;
+
+terminal String MAS, POR, DIV, MENOS, AP, CP, IDENT;
+terminal String NUMERO;
+
+nonterminal String exp, numlet, linea;
+
+precedence left MAS, MENOS ;
+precedence left POR, DIV; // Mas prioridad = + abajo
+precedence left AP, CP;
+
+
+linea ::= exp:e {:System.out.println(e);:};
+
+
+// Operaciones
+exp ::=exp:e1  MAS:m    exp:e2  {:RESULT = "+ " + e1 + " " + e2;:};
+exp ::=exp:e1  MENOS:m  exp:e2  {:RESULT = "- " + e1 + " " + e2;:};
+exp ::=exp:e1  POR:m    exp:e2  {:RESULT = "* " + e1 + " " + e2;:};
+exp ::=exp:e1  DIV:m   exp:e2   {:RESULT = "/ " + e1 + " " + e2;:};
+exp ::= AP exp:e CP             {:RESULT = e;:};
+exp ::= numlet:n                {:RESULT = n;:};
+
+// Numero o identificador
+numlet::= IDENT:idt {:RESULT = idt;:};
+numlet::= NUMERO:n  {:RESULT = n;:};
+
+
+
+
+
+
+

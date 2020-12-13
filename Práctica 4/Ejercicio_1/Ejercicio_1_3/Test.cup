@@ -1,0 +1,24 @@
+import java_cup.runtime.*;
+
+
+terminal String MAS, MENOS, POR, DIV, AP, CP, NUMERO, IDENT;
+non terminal String exp, numlet, op;
+
+
+precedence left MAS, MENOS;
+precedence left POR, DIV;
+precedence left AP, CP;
+
+
+exp::= exp:e1 MAS exp:e2      {:System.out.print("+ "); RESULT = e1; RESULT = e2;:};
+exp::= exp:e1 MENOS exp:e2    {:System.out.print("- "); RESULT = e1; RESULT = e2;:};
+exp::= exp:e1 POR exp:e2      {:System.out.print("* "); RESULT = e1; RESULT = e2;:};
+exp::= exp:e1 DIV exp:e2      {:System.out.print("/ "); RESULT = e1; RESULT = e2;:};
+exp::= AP exp:e CP            {:RESULT = e;:};
+exp ::= numlet:ni             {:RESULT = ni;:};
+
+// Numero o identificador
+numlet::= IDENT:idt           {:System.out.print(idt + " ");:};
+numlet::= NUMERO:n            {:System.out.print(n + " ");:};
+
+

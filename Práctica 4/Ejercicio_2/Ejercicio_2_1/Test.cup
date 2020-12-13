@@ -1,0 +1,30 @@
+import java_cup.runtime.*;
+
+
+
+action code
+{:
+    public int a1 = 0;
+    public int a2 = 0;
+    public boolean resultado = true;
+:}
+
+terminal Integer NUMERO;
+non terminal exp, compr, fib;
+nonterminal String linea;
+
+
+
+
+
+linea::= exp:e {: if (resultado) System.out.println("SI"); else System.out.println("NO");:};
+
+
+exp ::= NUMERO:n1 NUMERO:n2 {:a1 = n1; a2 = n2;:} compr;
+exp ::= NUMERO:n1 NUMERO:n2 {:if (n1 + 1 != n2) resultado = false; :};
+
+compr ::= NUMERO:n {:if (a1+a2 != n) resultado = false; a1 = a2; a2 = n;:} compr;
+compr ::= NUMERO:n {:if (a1+a2 != n) resultado = false; a1 = n;:};
+
+
+

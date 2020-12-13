@@ -1,0 +1,56 @@
+import java_cup.runtime.*;
+
+action code
+{:
+    public int a1 = 0;
+    public int a2 = 0;
+    public boolean resultado = true;
+:}
+
+
+terminal String MAS, MENOS, POR, PYC, AP, CP, NUMERO, ACOR, CCOR, MINUS, EOLN, COMA;
+
+non terminal Integer exp, matriz, elem;
+nonterminal lista;
+nonterminal String linea;
+
+
+precedence left MAS, MENOS;
+precedence left POR;
+precedence left AP, CP, ACOR, CCOR;
+precedence left MINUS;
+
+
+
+
+exp::= exp:e1 MAS {:System.out.print(" + ");:} exp:e2               {:RESULT = e1; RESULT = e2;:}
+        | exp:e1 MENOS {:System.out.print(" - ");:} exp:e2          {:RESULT = e1; RESULT = e2;:}
+        | exp:e1 POR {:System.out.print(" * ");:} exp:e2            {:RESULT = e1; RESULT = e2;:}
+        | AP {:System.out.print(" (");:} exp:e CP                   {:System.out.print(") "); RESULT = e;:}
+        | elem:m                                                    {:RESULT = m;:}
+        | MENOS {:System.out.print("- ");:} exp:e {: RESULT = e; :}
+    %prec MINUS;
+
+
+elem ::= matriz:m {:RESULT = m;:};
+elem ::= NUMERO:n {:System.out.print(n); RESULT = new Integer(n);:};
+
+matriz ::= ACOR {:System.out.print("[");:} matriz:m  {::};
+matriz ::= NUMERO:n COMA {:System.out.print(n + ",");:} matriz:m {::};
+matriz ::= NUMERO:n PYC {:System.out.print(n + "; ");:} matriz:m {::};
+matriz ::= NUMERO:n CCOR {:System.out.print(n); System.out.print("]"); RESULT = new Integer(n);:};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,21 @@
+import java_cup.runtime.*;
+
+terminal MAS, POR, DIV, MENOS;
+terminal Integer NUMERO;
+
+non terminal Integer exp;
+nonterminal String linea;
+
+precedence left MAS, MENOS;
+precedence left POR, DIV; // Mas prioridad = + abajo
+
+
+linea::= exp:e  {:System.out.println(e);:};
+
+
+exp ::= MAS exp:e1 exp:e2               {:RESULT = e1 + e2; :};
+exp ::= MENOS exp:e1 exp:e2             {:RESULT = e1 - e2; :};
+exp ::= POR exp:e1 exp:e2               {:RESULT = e1 * e2; :};
+exp ::= DIV exp:e1 exp:e2               {:RESULT = e1 / e2; :};
+exp ::= NUMERO:n                        {:RESULT = n;:};
+

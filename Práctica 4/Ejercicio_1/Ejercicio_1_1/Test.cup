@@ -1,0 +1,12 @@
+import java_cup.runtime.*;
+
+
+terminal String NUMERO, IDENT;
+
+non terminal String exp;
+
+
+exp::= NUMERO:n exp:e       {:RESULT = e; System.out.print(" " + n);:};
+exp::= IDENT:n exp:e        {:RESULT = e; System.out.print(" " + n);:};
+exp::= NUMERO:n             {:System.out.print(n);:};
+exp::= IDENT:n              {:System.out.print(n);:};

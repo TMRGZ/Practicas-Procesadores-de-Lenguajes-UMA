@@ -1,0 +1,23 @@
+import java_cup.runtime.*;
+
+
+terminal AC, CC, COMA;
+terminal Integer NUMERO;
+
+non terminal Integer exp, lista;
+nonterminal linea;
+
+precedence left COMA;
+
+linea::= lista:l                    {:System.out.println(l);:};
+
+
+lista::= AC exp:e CC                {:RESULT = e;:};
+lista::= AC lista:l CC              {:RESULT = 2*l;:};
+lista::= lista:l1 COMA lista:l2     {:RESULT = l1 + l2;:};
+lista::= AC CC                      {:RESULT = 0;:};
+
+
+exp ::= exp:e1 COMA exp:e2          {:RESULT = e1 + e2;:};
+exp ::= exp:e COMA lista:l          {:RESULT = e + 2*l;:};
+exp ::= NUMERO:n                    {:RESULT = n;:};

@@ -1,0 +1,24 @@
+import java_cup.runtime.*;
+
+terminal String INT, DOUBLE, PYC, COMA, DP, IDENT;
+
+non terminal String exp, tipo, idt;
+nonterminal String linea;
+
+
+
+
+exp ::= idt:i DP tipo:t PYC {:System.out.print(t + i + ";");:};
+
+
+// Identificadores
+idt ::= IDENT:i COMA idt:id {:RESULT = i +", " + id;:};
+idt ::= IDENT:i {:RESULT = i;:};
+
+// Int o double
+tipo ::= INT {: RESULT = "int ";:};
+tipo ::= DOUBLE {: RESULT = "double ";:};
+
+
+
+
