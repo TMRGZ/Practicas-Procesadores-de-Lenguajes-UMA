@@ -1,0 +1,109 @@
+import java_cup.runtime.*;
+
+nonterminal String Lista_de_Sent, Sentencia, Expresion, prIF, prELSE, prWHILE, Var, Ids, Incr, Operador, prFORTO, prSTEP;
+nonterminal DosEtiquetas Condicion, prFOR, prDO, prTO, prDOWNTO;
+terminal String WHILE, DO, MAS, MENOS, POR, DIV, AP, CP, ALL, CLL, ENTERO, IDENT, IF, ELSE, FOR, PRINT, PYC, MINUS, IGUAL, NOT, AND, OR, GT, GE, LT, LE, NE, EQ, INT, COMA, MASMAS, MENOSMENOS, MOD, TO, DOWNTO, STEP;
+
+precedence left WHILE, DO, ENTERO, ALL, IDENT, IF, FOR, PRINT, INT;
+precedence left COMA;
+precedence left ELSE;
+precedence left OR;
+precedence left AND;
+precedence left NOT;
+precedence left LT, GT, LE, GE, EQ, NE;
+precedence left MAS, MENOS;
+precedence left POR, DIV, MOD;
+precedence left MASMAS, MENOSMENOS;
+precedence left AP, CP;
+precedence left MINUS;
+
+start with Lista_de_Sent;
+
+Lista_de_Sent ::= Sentencia
+    | Lista_de_Sent Sentencia
+    |
+    ;
+
+Sentencia ::= Expresion:e PYC                           {:RESULT = e;:}
+    | prIF:iff AP Condicion:c                           {:Generator.salida(Generator.LABEL, null, null, c.v());:} CP Sentencia {:Generator.salida(Generator.GOTO, null, null, iff); Generator.salida(Generator.LABEL, null, null, c.f());:} prELSE {:Generator.salida(Generator.LABEL, null, null, iff);:}
+    | prWHILE:whilee                                    {:Generator.salida(Generator.LABEL, null, null, whilee);:} AP Condicion:c {:Generator.salida(Generator.LABEL, null, null, c.v());:} CP Sentencia {:Generator.salida(Generator.GOTO, null, null, whilee); Generator.salida(Generator.LABEL, null, null, c.f());:}
+    | prDO:doo                                          {:Generator.salida(Generator.LABEL, null, null, doo.v()); :} Sentencia WHILE AP Condicion:c CP {:Generator.salida(Generator.LABEL, null, null, c.v()); Generator.salida(Generator.GOTO, null, null, doo.v()); Generator.salida(Generator.LABEL, null, null, c.f());:} PYC
+    | prFOR:forr  AP Expresion                          {:Generator.salida(Generator.LABEL, null, null, forr.v());:} PYC Condicion:c {:Generator.salida(Generator.LABEL, null, null, forr.f());:} PYC Expresion {:Generator.salida(Generator.GOTO, null, null, forr.v()); Generator.salida(Generator.LABEL, null, null, c.v());:} CP Sentencia {:Generator.salida(Generator.GOTO, null, null, forr.f()); Generator.salida(Generator.LABEL, null, null, c.f());:}
+    | prFORTO                                           {::}
+    | PRINT AP Expresion:e CP PYC                       {:Generator.salida(sym.PRINT, null, null, e);:}
+    | ALL                                               {:TablaSimbolos.anadirNivel();:} Lista_de_Sent CLL {:TablaSimbolos.quitarNivel();:}
+    ;
+
+
+Expresion ::= Operador:o                                {:RESULT = o;:}
+    | Incr:i                                            {:RESULT = i;:}
+    | AP Expresion:e CP                                 {:RESULT = e;:}
+    | IDENT:i                                           {:RESULT = i + TablaSimbolos.get(i);:}
+    | IDENT:i IGUAL Expresion:e                         {:RESULT = i + TablaSimbolos.get(i); Generator.salida(sym.IDENT, e, null, RESULT);:}
+    | Ids Var:v                                         {:RESULT = v;:}
+    | ENTERO:e                                          {:RESULT = e;:}
+    | MENOS Expresion:e                                 {:RESULT = Generator.nuevaTemp(); Generator.salida(sym.MINUS, e, null, RESULT);:}
+    %prec MINUS
+    ;
+
+
+Incr ::= MASMAS Expresion:e                             {:RESULT = TablaSimbolos.getConcat(e); Generator.salida(sym.MASMAS, null, null, RESULT); :}
+    | MENOSMENOS Expresion:e                            {:RESULT = TablaSimbolos.getConcat(e); Generator.salida(sym.MENOSMENOS, null, null, RESULT); :}
+    | Expresion:e MASMAS                                {:RESULT = Generator.nuevaTemp(); Generator.salida(sym.IDENT, TablaSimbolos.getConcat(e), null, RESULT); Generator.salida(sym.MASMAS, null, null, TablaSimbolos.getConcat(e));:}
+    | Expresion:e MENOSMENOS                            {:RESULT = Generator.nuevaTemp(); Generator.salida(sym.IDENT, TablaSimbolos.getConcat(e), null, RESULT); Generator.salida(sym.MENOSMENOS, null, null, TablaSimbolos.getConcat(e));:}
+    ;
+
+
+Var ::= IDENT:i IGUAL Expresion:e                       {:TablaSimbolos.put(i, null); Generator.salida(sym.IDENT, e, null, i + TablaSimbolos.get(i)); RESULT = i;:}
+    | IDENT:i IGUAL Expresion:e COMA                    {:TablaSimbolos.put(i, null); Generator.salida(sym.IDENT, e, null, i + TablaSimbolos.get(i)); RESULT = i;:} Var
+    | IDENT:i COMA                                      {:TablaSimbolos.put(i, null);:} Var:v
+    | IDENT:i                                           {:TablaSimbolos.put(i, null); RESULT = i + TablaSimbolos.get(i);:}
+    ;
+
+
+Ids ::= INT                                             {::}
+    ;
+
+
+Operador ::= Expresion:e1 MAS Expresion:e2              {:RESULT = Generator.nuevaTemp(); Generator.salida(sym.MAS, e1, e2, RESULT);:}
+    | Expresion:e1 MENOS Expresion:e2                   {:RESULT = Generator.nuevaTemp(); Generator.salida(sym.MENOS, e1, e2, RESULT);:}
+    | Expresion:e1 POR Expresion:e2                     {:RESULT = Generator.nuevaTemp(); Generator.salida(sym.POR, e1, e2, RESULT);:}
+    | Expresion:e1 DIV Expresion:e2                     {:RESULT = Generator.nuevaTemp(); Generator.salida(sym.DIV, e1, e2, RESULT);:}
+    | Expresion:e1 MOD Expresion:e2                     {:String temp1 = Generator.nuevaTemp(); Generator.salida(sym.DIV, e1, e2, temp1); String temp2 = Generator.nuevaTemp(); Generator.salida(sym.POR, temp1, e2, temp2); temp1 = Generator.nuevaTemp(); Generator.salida(sym.MENOS, e1, temp2, temp1); RESULT = temp1;:}
+    ;
+
+
+Condicion ::= Expresion:e1 EQ Expresion:e2              {:RESULT = new DosEtiquetas(); Generator.salida(Generator.IFGOTO, e1+" == ", e2, RESULT.v()); Generator.salida(Generator.GOTO, null, null, RESULT.f()); :}
+    | Expresion:e1 NE Expresion:e2                      {:RESULT = new DosEtiquetas(); Generator.salida(Generator.IFGOTO, e1+" == ", e2, RESULT.f()); Generator.salida(Generator.GOTO, null, null, RESULT.v()); :}
+    | Expresion:e1 LT Expresion:e2                      {:RESULT = new DosEtiquetas(); Generator.salida(Generator.IFGOTO, e1+" < ", e2, RESULT.v()); Generator.salida(Generator.GOTO, null, null, RESULT.f()); :}
+    | Expresion:e1 LE Expresion:e2                      {:RESULT = new DosEtiquetas(); Generator.salida(Generator.IFGOTO, e2+" < ", e1, RESULT.f()); Generator.salida(Generator.GOTO, null, null, RESULT.v()); :}
+    | Expresion:e1 GT Expresion:e2                      {:RESULT = new DosEtiquetas(); Generator.salida(Generator.IFGOTO, e2+" < ", e1, RESULT.v()); Generator.salida(Generator.GOTO, null, null, RESULT.f()); :}
+    | Expresion:e1 GE Expresion:e2                      {:RESULT = new DosEtiquetas(); Generator.salida(Generator.IFGOTO, e1+" < ", e2, RESULT.f()); Generator.salida(Generator.GOTO, null, null, RESULT.v()); :}
+    | NOT Condicion:c                                   {:c.swap(); RESULT = c;:}
+    | Condicion:c1 AND                                  {:Generator.salida(Generator.LABEL, null, null, c1.v()); :} Condicion:c2 {:Generator.salida(Generator.LABEL, null, null, c1.f()); Generator.salida(Generator.GOTO, null, null, c2.f()); RESULT = c2;:}
+    | Condicion:c1 OR                                   {:Generator.salida(Generator.LABEL, null, null, c1.f()); :} Condicion:c2 {:Generator.salida(Generator.LABEL, null, null, c1.v()); Generator.salida(Generator.GOTO, null, null, c2.v()); RESULT = c2;:}
+    | AP Condicion:c CP                                 {:RESULT = c;:}
+    ;
+
+prFORTO ::= prFOR:forr Expresion:e1 prTO:c Expresion:e2 {:Generator.salida(Generator.LABEL, null, null, forr.v()); Generator.salida(Generator.IFGOTO, e2+" < ", e1, c.f()); Generator.salida(Generator.GOTO, null, null, c.v()); Generator.salida(Generator.LABEL, null, null, forr.f());:} prSTEP:s DO {:Generator.salida(sym.MAS, e1 + TablaSimbolos.get(e1), s, e1 + TablaSimbolos.get(e1)); Generator.salida(Generator.GOTO, null, null, forr.v()); Generator.salida(Generator.LABEL, null, null, c.v());:} Sentencia {:Generator.salida(Generator.GOTO, null, null, forr.f()); Generator.salida(Generator.LABEL, null, null, c.f());:}
+    | prFOR:forr Expresion:e1 prDOWNTO:c Expresion:e2   {:Generator.salida(Generator.LABEL, null, null, forr.v()); Generator.salida(Generator.IFGOTO, e1+" < ", e2, c.f()); Generator.salida(Generator.GOTO, null, null, c.v()); Generator.salida(Generator.LABEL, null, null, forr.f());:} prSTEP:s DO {:Generator.salida(sym.MENOS, e1 + TablaSimbolos.get(e1), s, e1 + TablaSimbolos.get(e1)); Generator.salida(Generator.GOTO, null, null, forr.v()); Generator.salida(Generator.LABEL, null, null, c.v());:} Sentencia {:Generator.salida(Generator.GOTO, null, null, forr.f()); Generator.salida(Generator.LABEL, null, null, c.f());:}
+    ;
+
+
+prSTEP ::= STEP Expresion:e                             {:RESULT = e;:}
+    |                                                   {:RESULT = "1";:}
+    ;
+
+prTO ::= TO {:RESULT = new DosEtiquetas();:};
+
+prDOWNTO ::= DOWNTO {:RESULT = new DosEtiquetas();:};
+
+prIF ::= IF {:RESULT = Generator.nuevaLabel();:};
+
+prELSE ::= ELSE Sentencia {::} | {::};
+
+prDO ::= DO {:RESULT = new DosEtiquetas();:};
+
+prFOR ::= FOR {:RESULT = new DosEtiquetas();:};
+
+prWHILE ::= WHILE {:RESULT = Generator.nuevaLabel();:};
