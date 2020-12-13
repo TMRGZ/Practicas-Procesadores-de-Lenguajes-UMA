@@ -1,0 +1,37 @@
+	_t0[0] = 97;
+	_t0_length = 1;
+	_t1[0] = 98;
+	_t1_length = 1;
+	_t2_length = _t0_length + _t1_length;
+	_t3 = 0;
+L0:
+	if (_t3 < _t0_length) goto L1;
+	goto L2;
+L1:
+	_t4 = _t0[_t3];
+	_t2[_t3] = _t4;
+	_t3 = _t3 +1;
+	goto L0;
+L2:
+	_t5 = 0;
+L3:
+	if (_t5 < _t1_length) goto L4;
+	goto L5;
+L4:
+	_t4 = _t1[_t5];
+	_t2[_t3] = _t4;
+	_t3 = _t3 +1;
+	_t5 = _t5 +1;
+	goto L3;
+L5:
+	_t6 = 0;
+L6:
+	if (_t6 < _t2_length) goto L7;
+	goto L8;
+L7:
+	_t7 = _t2[_t6];
+	writec _t7;
+	_t6 = _t6 +1;
+	goto L6;
+L8:
+	writec 10;
